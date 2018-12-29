@@ -37,7 +37,7 @@ class scrapy.spiders.Rule(
 
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from scrapyspider.items import SunwzspiderItem
+from scrapy_spider.items import SunwzspiderItem
 
 
 class SunwzSpider(CrawlSpider):

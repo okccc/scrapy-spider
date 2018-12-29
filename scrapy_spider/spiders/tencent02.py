@@ -37,7 +37,7 @@ class scrapy.spiders.Rule(
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from scrapyspider.items import TencentspiderItem
+from scrapy_spider.items import TencentspiderItem
 
 
 class TencentSpider(CrawlSpider):

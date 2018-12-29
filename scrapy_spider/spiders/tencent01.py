@@ -37,7 +37,7 @@ parse()方法工作机制：
 """
 
 import scrapy
-from scrapyspider.items import TencentspiderItem
+from scrapy_spider.items import TencentspiderItem
 
 
 class TencentSpider(scrapy.Spider):

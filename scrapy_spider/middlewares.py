@@ -104,7 +104,7 @@ class ScrapyspiderDownloaderMiddleware(object):
 
 
 from fake_useragent import UserAgent
-from scrapyspider.utils.crud import random
+from scrapy_spider.utils.crud import random
 from scrapy.http import HtmlResponse
 
 

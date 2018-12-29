@@ -21,7 +21,7 @@ xpath提取数据时: extract()[0] == get()
 """
 
 import scrapy
-from scrapyspider.items import SunwzspiderItem
+from scrapy_spider.items import SunwzspiderItem
 
 
 class SunwzSpider(scrapy.Spider):

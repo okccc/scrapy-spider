@@ -6,7 +6,7 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymysql
-from scrapyspider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02, HospitalItem, DoctorItem
+from scrapy_spider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02, HospitalItem, DoctorItem
 from twisted.enterprise import adbapi
 import json
 

@@ -7,7 +7,7 @@ AttributeError: 'str' object has no attribute 'iter'
 """
 
 import scrapy
-from scrapyspider.items import HospitalItem, DoctorItem
+from scrapy_spider.items import HospitalItem, DoctorItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 import time

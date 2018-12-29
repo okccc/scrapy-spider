@@ -26,11 +26,11 @@ pip freeze > requirements.txt
 
 import scrapy
 import re
-from scrapyspider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02
+from scrapy_spider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
-from scrapyspider.utils.common import get_md5
-from scrapyspider.items import MyItemLoader
+from scrapy_spider.utils.common import get_md5
+from scrapy_spider.items import MyItemLoader
 
 
 class scrapyspider(scrapy.Spider):
