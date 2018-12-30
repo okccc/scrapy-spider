@@ -1,7 +1,7 @@
 import requests
 from lxml import etree
-from scrapyspider.utils.crud import insert
-from scrapyspider.utils.crud import check
+from scrapy_spider.utils.crud import insert
+from scrapy_spider.utils.crud import check
 
 
 def crawl01():
