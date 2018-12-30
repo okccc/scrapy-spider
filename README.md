@@ -1,1 +1,1 @@
-# scrapyspider
+# scrapy-spider
