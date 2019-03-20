@@ -14,6 +14,7 @@ BOT_NAME = 'scrapy_spider'
 SPIDER_MODULES = ['scrapy_spider.spiders']
 NEWSPIDER_MODULE = 'scrapy_spider.spiders'
 
+LOG_LEVEL = "DEBUG"  # 设置日志级别
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_spider (+http://www.yourdomain.com)'
@@ -70,7 +71,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'scrapy_spider.pipelines.TencentspiderPipeline': 300,
+   'scrapy_spider.pipelines.TencentspiderPipeline': 300,  # 300表示距离scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
    # 'scrapy_spider.pipelines.SunwzspiderPipeline': 300,
    # 'scrapy_spider.pipelines.JianshuspiderPipeline': 300,
    # 'scrapy_spider.pipelines.JianshuTwistedspiderPipline': 300,

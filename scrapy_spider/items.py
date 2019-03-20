@@ -248,7 +248,7 @@ class TencentspiderItem(scrapy.Item):
     # 职位名称
     name = scrapy.Field()
     # 详细链接
-    detailLink = scrapy.Field()
+    link = scrapy.Field()
     # 职位类别
     sort = scrapy.Field()
     # 招聘人数
@@ -256,6 +256,6 @@ class TencentspiderItem(scrapy.Item):
     # 上班地点
     site = scrapy.Field()
     # 发布时间
-    publishTime = scrapy.Field()
+    publish = scrapy.Field()
 
 

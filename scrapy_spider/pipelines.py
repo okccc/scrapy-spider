@@ -189,15 +189,10 @@ class SunwzspiderPipeline(object):
 
 
 class TencentspiderPipeline(object):
-    """
-    管道文件：保存爬虫程序抓取的数据
-            要在settings.py文件添加配置以启用ITEM_PIPELINE组件
-    """
-
     def __init__(self):
         self.file = open("./position.csv", "w", encoding="utf-8")
 
-    # 初始化和关闭文件方法只会执行一次，写数据方法会反复调用，有数据过来就处理
+    # 初始化和关闭文件方法只会执行一次,写数据方法会反复调用,有数据过来就处理
     def process_item(self, item, spider):
         self.file.write(json.dumps(dict(item), ensure_ascii=False) + "\n")
         return item
@@ -209,20 +204,19 @@ class TencentspiderPipeline(object):
 class ItcastPipeline(object):
     """
     管道文件：保存爬虫程序抓取的数据
-            要在settings.py文件添加配置以启用ITEM_PIPELINE组件
     """
 
-    # __init__()方法是可选的，用于初始化
+    # __init__()方法是可选的,用于初始化
     def __init__(self):
-        self.filename = open("C://Users/chenqian/Desktop/teacher.json", "w", encoding="utf-8")
+        self.filename = open("./teacher.json", "w", encoding="utf-8")
 
-    # process_item()方法是必须写的，用来处理item数据
+    # process_item()方法必须写,用来处理item数据
     def process_item(self, item, spider):
         # 注意：要先将item对象转换成dict --> TypeError: Object of type 'MyspiderItem' is not JSON serializable
         self.filename.write(json.dumps(dict(item), ensure_ascii=False) + "\n")
-        # 该方法必须返回一个Item对象，被丢弃的Item不会被之后的pipeline组件处理
+        # 为了在不同的pipeline中传递item需要将其return,不然后序pipeline接收的item是None
         return item
 
-    # close_spider()方法是可选的，结束时调用
+    # close_spider()方法是可选的,结束时调用
     def close_spider(self, spider):
         self.filename.close()

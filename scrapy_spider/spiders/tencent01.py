@@ -47,46 +47,42 @@ class TencentSpider(scrapy.Spider):
 
     # 爬虫名称
     name = "tencent01"
-    # 域名
+    # 限定范围
     allowed_domains = ["tencent.com"]
     # 起始url
     url = "http://hr.tencent.com/position.php?&start="
     offset = 0
     start_urls = [url + str(offset)]
 
+    # parse方法名是固定的,继承的父类未实现的方法
     def parse(self, response):
         # 创建Item对象
         item = TencentspiderItem()
-
         # 获取当前页职位信息列表
         positions = response.xpath("//tr[@class='even'] | //tr[@class='odd']")
         # 遍历所有职位
         for each in positions:
             # 职位名称
-            name = each.xpath("./td[1]/a/text()").extract()[0]
+            name = each.xpath("./td[1]/a/text()").extract_first()
             # 详细链接
-            detailLink = each.xpath("./td[1]/a/@href").extract()[0]
+            link = "https://hr.tencent.com/" + each.xpath("./td[1]/a/@href").extract_first()
             # 职位类别
-            sort_list = each.xpath("./td[2]/text()").extract()
-            if len(sort_list) == 0:
-                sort = ""
-            else:
-                sort = sort_list[0]
+            sort = each.xpath("./td[2]/text()").extract_first()
             # 招聘人数
-            num = each.xpath("./td[3]/text()").extract()[0]
+            num = each.xpath("./td[3]/text()").extract_first()
             # 上班地点
-            site = each.xpath("./td[4]/text()").extract()[0]
+            site = each.xpath("./td[4]/text()").extract_first()
             # 发布时间
-            publishTime = each.xpath("./td[5]/text()").extract()[0]
+            publish = each.xpath("./td[5]/text()").extract_first()
 
             item['name'] = name
-            item['detailLink'] = detailLink
+            item['link'] = link
             item['sort'] = sort
             item['num'] = num
             item['site'] = site
-            item['publishTime'] = publishTime
+            item['publish'] = publish
 
-            # 将数据交给pipeline处理
+            # yield该item减少内存占用,yield只能接Request/item/dict/None
             yield item
 
         # 爬完第一页继续往后翻
