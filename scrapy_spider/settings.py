@@ -28,7 +28,7 @@ CONCURRENT_REQUESTS = 16
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 3  # 下载延迟：下载下一个页面时需要等待的时间
+DOWNLOAD_DELAY = 1  # 下载延迟：下载下一个页面时需要等待的时间
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -71,12 +71,12 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'scrapy_spider.pipelines.TencentspiderPipeline': 300,  # 300表示距离scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
-   # 'scrapy_spider.pipelines.SunwzspiderPipeline': 300,
-   # 'scrapy_spider.pipelines.JianshuspiderPipeline': 300,
-   # 'scrapy_spider.pipelines.JianshuTwistedspiderPipline': 300,
-   # 'scrapy_spider.pipelines.SoyoungspiderPipeline': 300,
-   # 'scrapy_spider.pipelines.SoufangspiderPipeline': 300,
+   'scrapy_spider.pipelines.TencentPipeline': 300,  # 300表示距离scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
+   # 'scrapy_spider.pipelines.SunwzPipeline': 300,
+   # 'scrapy_spider.pipelines.JianshuPipeline': 300,
+   # 'scrapy_spider.pipelines.JianshuTwistedPipline': 300,
+   # 'scrapy_spider.pipelines.SoyoungPipeline': 300,
+   # 'scrapy_spider.pipelines.SoufangPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -9,57 +9,45 @@ import pymysql
 from scrapy_spider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02, HospitalItem, DoctorItem
 from twisted.enterprise import adbapi
 import json
+import re
 
 
-class SoufangspiderPipeline(object):
+class TencentPipeline(object):
     def __init__(self):
-
-        config = {
-            "host": "localhost",
-            "port": 3306,
-            "user": "root",
-            "password": "root",
-            "db": "test",
-            "charset": "utf8",
-            "cursorclass": pymysql.cursors.DictCursor  # 以dict格式返回数据
-        }
-        # 创建数据库连接池
-        self.dbpool = adbapi.ConnectionPool("pymysql", **config)
+        self.file = open("./position.csv", "w", encoding="utf-8")
 
     def process_item(self, item, spider):
-        # runInteraction()函数将mysql插入变成异步执行,直接调用insert方法是同步插入
-        self.dbpool.runInteraction(self.do_insert, item)
-
+        """
+        process_item()方法必须写,用来处理item数据
+        注意：要先将item对象转换成dict --> TypeError: Object of type 'MyspiderItem' is not JSON serializable
+        写入文件和数据库区别：
+        程序报错文件是没有数据的,因为没有等到file.close()执行
+        程序报错数据库也会有数据,因为insert之后的commit操作不需要等到con.close(),所以抓多少就能存多少
+        """
+        self.file.write(json.dumps(dict(item), ensure_ascii=False, indent=2))
         return item
 
-    def do_insert(self, cursor, item):
-        value = []
-        if item.__class__ == NewHouseItem:
-            fields1 = ["id", "province", "city", "community", "url", "price", "area", "district", "address", "sale"]
-            for field in fields1:
-                value.append(item[field])
-        # elif item.__class__.startswith("EsfHouseItem"):
-        elif item.__class__ == EsfHouseItem or EsfHouseItem02:
-            fields2 = ["community", "title", "province", "city", "address", "rooms", "floor", "toward", "year", "area", "price", "unit"]
-            for field in fields2:
-                value.append(item[field])
-        else:
-            pass
-
-        try:
-            sql1 = "replace into newhouse values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            sql2 = "replace into esfhouse values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-            if len(value) == 10:
-                cursor.execute(sql1, value)
-            elif len(value) == 12:
-                cursor.execute(sql2, value)
-            else:
-                pass
-        except Exception as e:
-            print(e)
+    def close_spider(self, spider):
+        # This method is called when the spider is closed.
+        self.file.close()
 
 
-class SoyoungspiderPipeline(object):
+class SunwzPipeline(object):
+    def process_item(self, item, spider):
+        # content字段的值要处理下
+        item["content"] = self.process_content(item["content"])
+        with open("./sun.json", "a", encoding="utf8") as f:
+            f.write(json.dumps(dict(item), ensure_ascii=False, indent=2) + "\n")
+        return item
+
+    @staticmethod
+    def process_content(content):
+        # 处理content中的乱码字符和空字符串
+        content = "".join("".join([re.sub("\xa0", "", i) for i in content]).split())
+        return content
+
+
+class SoyoungPipeline(object):
     def __init__(self):
 
         config = {
@@ -108,7 +96,7 @@ class SoyoungspiderPipeline(object):
         self.conn.close()
 
 
-class JianshuspiderPipeline(object):
+class JianshuPipeline(object):
     def __init__(self):
         config = {
             "host": "localhost",
@@ -142,7 +130,7 @@ class JianshuspiderPipeline(object):
         self.conn.close()
 
 
-class JianshuTwistedspiderPipline(object):
+class JianshuTwistedPipline(object):
     def __init__(self):
         config = {
             "host": "localhost",
@@ -176,47 +164,55 @@ class JianshuTwistedspiderPipline(object):
             print(e)
 
 
-class SunwzspiderPipeline(object):
+class SoufangPipeline(object):
     def __init__(self):
-        self.file = open("C://Users/Public/post.json", "w", encoding="utf-8")
+
+        config = {
+            "host": "localhost",
+            "port": 3306,
+            "user": "root",
+            "password": "root",
+            "db": "test",
+            "charset": "utf8",
+            "cursorclass": pymysql.cursors.DictCursor  # 以dict格式返回数据
+        }
+        # 创建数据库连接池
+        self.dbpool = adbapi.ConnectionPool("pymysql", **config)
 
     def process_item(self, item, spider):
-        self.file.write(json.dumps(dict(item), ensure_ascii=False) + "\n")
+        # runInteraction()函数将mysql插入变成异步执行,直接调用insert方法是同步插入
+        self.dbpool.runInteraction(self.do_insert, item)
+
         return item
 
-    def close(self):
-        self.file.close()
+    def do_insert(self, cursor, item):
+        value = []
+        if item.__class__ == NewHouseItem:
+            fields1 = ["id", "province", "city", "community", "url", "price", "area", "district", "address", "sale"]
+            for field in fields1:
+                value.append(item[field])
+        # elif item.__class__.startswith("EsfHouseItem"):
+        elif item.__class__ == EsfHouseItem or EsfHouseItem02:
+            fields2 = ["community", "title", "province", "city", "address", "rooms", "floor", "toward", "year", "area", "price", "unit"]
+            for field in fields2:
+                value.append(item[field])
+        else:
+            pass
+
+        try:
+            sql1 = "replace into newhouse values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            sql2 = "replace into esfhouse values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            if len(value) == 10:
+                cursor.execute(sql1, value)
+            elif len(value) == 12:
+                cursor.execute(sql2, value)
+            else:
+                pass
+        except Exception as e:
+            print(e)
 
 
-class TencentspiderPipeline(object):
-    def __init__(self):
-        self.file = open("./position.csv", "w", encoding="utf-8")
-
-    # 初始化和关闭文件方法只会执行一次,写数据方法会反复调用,有数据过来就处理
-    def process_item(self, item, spider):
-        self.file.write(json.dumps(dict(item), ensure_ascii=False) + "\n")
-        return item
-
-    def close(self):
-        self.file.close()
 
 
-class ItcastPipeline(object):
-    """
-    管道文件：保存爬虫程序抓取的数据
-    """
 
-    # __init__()方法是可选的,用于初始化
-    def __init__(self):
-        self.filename = open("./teacher.json", "w", encoding="utf-8")
 
-    # process_item()方法必须写,用来处理item数据
-    def process_item(self, item, spider):
-        # 注意：要先将item对象转换成dict --> TypeError: Object of type 'MyspiderItem' is not JSON serializable
-        self.filename.write(json.dumps(dict(item), ensure_ascii=False) + "\n")
-        # 为了在不同的pipeline中传递item需要将其return,不然后序pipeline接收的item是None
-        return item
-
-    # close_spider()方法是可选的,结束时调用
-    def close_spider(self, spider):
-        self.filename.close()

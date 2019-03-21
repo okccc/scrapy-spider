@@ -37,7 +37,7 @@ parse()方法工作机制：
 """
 
 import scrapy
-from scrapy_spider.items import TencentspiderItem
+from scrapy_spider.items import TencentItem
 
 
 class TencentSpider(scrapy.Spider):
@@ -47,17 +47,15 @@ class TencentSpider(scrapy.Spider):
 
     # 爬虫名称
     name = "tencent01"
-    # 限定范围
+    # 爬取范围
     allowed_domains = ["tencent.com"]
-    # 起始url
-    url = "http://hr.tencent.com/position.php?&start="
-    offset = 0
-    start_urls = [url + str(offset)]
+    # 初始url,不会被allowed_domains过滤
+    start_urls = ["http://hr.tencent.com/position.php?&start="]
 
-    # parse方法名是固定的,继承的父类未实现的方法
+    # 注意：parse方法名是固定的,继承的父类未实现的方法
     def parse(self, response):
         # 创建Item对象
-        item = TencentspiderItem()
+        item = TencentItem()
         # 获取当前页职位信息列表
         positions = response.xpath("//tr[@class='even'] | //tr[@class='odd']")
         # 遍历所有职位
@@ -74,21 +72,23 @@ class TencentSpider(scrapy.Spider):
             site = each.xpath("./td[4]/text()").extract_first()
             # 发布时间
             publish = each.xpath("./td[5]/text()").extract_first()
-
             item['name'] = name
             item['link'] = link
             item['sort'] = sort
             item['num'] = num
             item['site'] = site
             item['publish'] = publish
-
-            # yield该item减少内存占用,yield只能接Request/item/dict/None
+            # yield可以减少内存占用,yield只能接Request/BaseItem/dict/None
             yield item
-
-        # 爬完第一页继续往后翻
-        if self.offset < 100:
-            self.offset += 10
-            # 向新的页面发起请求并调用self.parse处理response
-            yield scrapy.Request(self.url + str(self.offset), callback=self.parse)
+        # 判断下一页
+        next_page = "http://hr.tencent.com/" + response.xpath('//a[@id="next"]/@href').extract_first()
+        if next_page != "javascript:;":
+            """
+            scrapy.Request()构建request对象
+            callback：指定传入放入url交给哪个方法解析
+            meta：在不同的解析方法中传递数据,默认会携带下载延迟和请求深度等信息
+            dont_filter：scrapy默认对url去重,但是有时候需要多次请求同一个url
+            """
+            yield scrapy.Request(url=next_page, callback=self.parse)
 
 

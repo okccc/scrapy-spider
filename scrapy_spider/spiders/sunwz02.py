@@ -37,7 +37,7 @@ class scrapy.spiders.Rule(
 
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from scrapy_spider.items import SunwzspiderItem
+from scrapy_spider.items import SunwzItem
 
 
 class SunwzSpider(CrawlSpider):
@@ -70,7 +70,7 @@ class SunwzSpider(CrawlSpider):
     # 处理帖子数据
     def parse_item(self, response):
         # 创建Item对象
-        item = SunwzspiderItem()
+        item = SunwzItem()
 
         text1 = response.xpath("//div[@class='pagecenter p3']//strong[@class='tgray14']/text()").extract()[0]
         # 编号

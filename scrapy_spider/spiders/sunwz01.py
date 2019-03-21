@@ -11,87 +11,55 @@ sep = "-"
 sequence = ["a", "b", "c"]
 print(sep.join(sequence))  # a-b-c
 
-问题：用xpathhelper测试时发现//div[@class='***']/text()的results != 1,是因为网页源码中的<br>换行符(见截图)
-     如果text = response.xpath("//div[@class='***']/text()").extract()[0]则只能取到文本的第一行而不是全部行的数据
+问题：xpath_helper测试时发现//div[@class='***']/text()的results != 1,是因为网页源码中的<br>换行符(见截图)
+     response.xpath("//div[@class='***']/text()").extract_first()只能取到文本的第一行而不是全部行
 解决：text = response.xpath("//div[@class='***']/text()").extract()  # 此时text是包含所有行的list
      res = "".join(text).strip()
 
-xpath提取数据时: extract()[0] == get()
+xpath提取数据时: extract()[0] == extract_first() == get()
                extract() == getall()
 """
 
 import scrapy
-from scrapy_spider.items import SunwzspiderItem
+from scrapy_spider.items import SunwzItem
 
 
 class SunwzSpider(scrapy.Spider):
-    """
-    基于Spider类的爬虫
-    """
-
     # 爬虫名称
     name = 'sunwz01'
-    # 网站域名
+    # 爬取范围
     allowed_domains = ['wz.sun0769.com']
-    # 起始url
-    url = "http://wz.sun0769.com/index.php/question/questionType?type=4&page="
-    offset = 0
-    start_urls = [url + str(offset)]
+    # 初始url
+    start_urls = ["http://wz.sun0769.com/index.php/question/questionType?type=4&page="]
 
-    # 获取页面response的所有帖子
     def parse(self, response):
-        # 获取当前页所有帖子的链接列表
-        links = response.xpath("//a[@class='news14']/@href").extract()
-        # 迭代获取每个帖子链接
-        for each in links:
-            # 将链接放到请求队列并调用self.parse_item处理帖子的response
-            yield scrapy.Request(each, callback=self.parse_item)
-        # 爬完第一页继续往后翻
-        if self.offset < 120:
-            self.offset += 30
-            # 向新的页面发起请求并调用self.parse处理页面的response
-            yield scrapy.Request(self.url + str(self.offset), callback=self.parse)
+        # 获取当前页帖子标签列表
+        tr_list = response.xpath('//td[@align="center"]//tr')
+        # 遍历
+        for tr in tr_list:
+            # 创建Item对象
+            item = SunwzItem()
+            # 先提取列表页能提取的字段
+            item["title"] = tr.xpath('.//a[2]/text()').extract_first()
+            item["link"] = tr.xpath('.//a[2]/@href').extract_first()
+            item["publish"] = tr.xpath('.//td[last()]/text()').extract_first()
+            # 构建新的request对象访问详情页
+            yield scrapy.Request(url=item["link"], callback=self.parse_detail, meta={"item": item})
+        # 判断下一页：
+        next_page = response.xpath('//a[text()=">"]/@href').extract_first()
+        if next_page is not None:
+            # 翻页继续请求数据
+            yield scrapy.Request(next_page, callback=self.parse)
 
-    # 处理每个帖子response的内容
-    def parse_item(self, response):
-        # 创建Item对象
-        item = SunwzspiderItem()
-
-        text1 = response.xpath("//div[@class='pagecenter p3']//strong[@class='tgray14']/text()").extract()[0]
-        # 编号
-        id = text1.split()[-1].split(":")[1]
-        # 标题
-        title = text1.split()[0].split("：")[1]
-        # 链接
-        link = response.url
-        # 状态
-        status = response.xpath("//div[@class='cleft']/span/text()").extract()[0]
-        text2 = response.xpath("//div[@class='content text14_2']//p/text()").extract()[0]
-        # 网友
-        netizen = text2.split()[0].split("：")[1]
-        # 时间
-        time = text2.split("：")[-1].strip()
-        # 内容(带图片)
-        content = response.xpath("//div[@class='contentext']/text()").extract()
-        if len(content) == 0:
-            # 不带图片
-            content = response.xpath("//div[@class='c1 text14_2']/text()").extract()
+    @staticmethod
+    def parse_detail(response):
+        # 接收上个方法传递的item对象
+        item = response.meta["item"]
+        # 继续提取详情页的字段
+        item["img"] = response.xpath('//td[@class="txt16_3"]//img/@src').extract_first()
+        item["img"] = "http://wz.sun0769.com" + item["img"] if item["img"] else None
+        if item["img"]:
+            item["content"] = response.xpath('//div[@class="contentext"]/text()').extract_first()
         else:
-            content = content
-
-        item["id"] = id
-        item["title"] = title
-        item["link"] = link
-        item["status"] = status
-        item["netizen"] = netizen
-        item["time"] = time
-        item["content"] = "".join("".join(content).strip().split())
-
-        # 将数据交给pipeline处理
+            item["content"] = response.xpath('//td[@class="txt16_3"]/text()').extract_first()
         yield item
-
-        # # 爬完第一页继续往后翻
-        # if self.offset < 120:
-        #     self.offset += 30
-        # # 向新的页面发起请求并调用self.parse处理页面的response
-        # yield scrapy.Request(self.url + str(self.offset), callback=self.parse)

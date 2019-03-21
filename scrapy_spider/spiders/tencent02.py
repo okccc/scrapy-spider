@@ -37,7 +37,7 @@ class scrapy.spiders.Rule(
 
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
-from scrapy_spider.items import TencentspiderItem
+from scrapy_spider.items import TencentItem
 
 
 class TencentSpider(CrawlSpider):
@@ -66,7 +66,7 @@ class TencentSpider(CrawlSpider):
         # print(response.url)  # https://hr.tencent.com/position.php?&start=0
 
         # 创建Item对象
-        item = TencentspiderItem()
+        item = TencentItem()
 
         # 获取当前页职位信息列表
         positions = response.xpath("//tr[@class='odd'] | //tr[@class='even']")

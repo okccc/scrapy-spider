@@ -205,7 +205,7 @@ class DoctorItem(scrapy.Item):
     insert_time = scrapy.Field()
 
 
-class JianshuspiderItem(scrapy.Item):
+class JianshuItem(scrapy.Item):
     id = scrapy.Field()  # 编号
     title = scrapy.Field()  # 标题
     link = scrapy.Field()  # 链接
@@ -217,34 +217,20 @@ class JianshuspiderItem(scrapy.Item):
     subjects = scrapy.Field()  # 专题(该字段需要使用selenium模拟浏览器点击标签)
 
 
-class SunwzspiderItem(scrapy.Item):
-    """
-    需求：抓取http://wz.sun0769.com/index.php/question/questionType?type=4网站每个帖子信息
-    """
-
-    # 编号
-    id = scrapy.Field()
+class SunwzItem(scrapy.Item):
     # 标题
     title = scrapy.Field()
     # 链接
     link = scrapy.Field()
-    # 状态
-    status = scrapy.Field()
-    # 网友
-    netizen = scrapy.Field()
     # 时间
-    time = scrapy.Field()
+    publish = scrapy.Field()
     # 内容
     content = scrapy.Field()
+    # 图片
+    img = scrapy.Field()
 
 
-class TencentspiderItem(scrapy.Item):
-    """
-    需求：抓取http://hr.tencent.com/position.php?&start=0#a职位数据
-    """
-
-    # define the fields for your item here like:
-
+class TencentItem(scrapy.Item):
     # 职位名称
     name = scrapy.Field()
     # 详细链接

@@ -6,7 +6,7 @@
 
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from scrapy_spider.items import JianshuspiderItem
+from scrapy_spider.items import JianshuItem
 from selenium import webdriver
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
