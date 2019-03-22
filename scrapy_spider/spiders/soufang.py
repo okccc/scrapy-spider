@@ -26,7 +26,7 @@ pip freeze > requirements.txt
 
 import scrapy
 import re
-from scrapy_spider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02
+from scrapy_spider.items import XFItem, ESFItem, ESFItem02
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 from scrapy_spider.utils.common import get_md5
@@ -113,7 +113,7 @@ class scrapyspider(scrapy.Spider):
             if each.xpath('.//div[contains(@class, "fangyuan")]/span/text()').get() == "售完":
                 continue
             # 使用ItemLoader填充item数据(根据具体情况接收selector/response)
-            loader = MyItemLoader(item=NewHouseItem(), selector=each)
+            loader = MyItemLoader(item=XFItem(), selector=each)
             loader.add_value('id', get_md5())
             loader.add_value('province', province)
             loader.add_value('city', city)
@@ -150,7 +150,7 @@ class scrapyspider(scrapy.Spider):
         # 遍历所有房源
         for each in houses:
             # 使用ItemLoader填充item数据(根据具体情况接收response/selector)
-            loader = MyItemLoader(item=EsfHouseItem(), selector=each)
+            loader = MyItemLoader(item=ESFItem(), selector=each)
             loader.add_value('province', province)
             loader.add_value('city', city)
             loader.add_xpath('community', './/p[@class="mt10"]/a/span/text()')
@@ -181,7 +181,7 @@ class scrapyspider(scrapy.Spider):
         houses = response.xpath('//div[contains(@class, "shop_list")]/dl')
         for each in houses:
             # 使用ItemLoader填充item数据(根据具体情况接收response/selector)
-            loader = MyItemLoader(item=EsfHouseItem02(), selector=each)
+            loader = MyItemLoader(item=ESFItem02(), selector=each)
             loader.add_value('province', province)
             loader.add_value('city', city)
             loader.add_xpath('community', './/p[@class="add_shop"]/a/@title')

@@ -46,7 +46,7 @@ def deal_district(value):
     return value.split()[0]
 
 
-class NewHouseItem(scrapy.Item):
+class XFItem(scrapy.Item):
     # 构建Item模型(类似ORM对象关系映射)：用来定义结构化数据字段,保存爬取到的数据,类似python的dict
     id = scrapy.Field()
     province = scrapy.Field()
@@ -89,7 +89,7 @@ def deal_year(value):
         return tmp[3]
 
 
-class EsfHouseItem(scrapy.Item):
+class ESFItem(scrapy.Item):
     province = scrapy.Field()
     city = scrapy.Field()
     community = scrapy.Field()
@@ -144,7 +144,7 @@ def deal_year02(value):
         return tmp[4]
 
 
-class EsfHouseItem02(scrapy.Item):
+class ESFItem02(scrapy.Item):
     province = scrapy.Field()
     city = scrapy.Field()
     community = scrapy.Field()
@@ -205,7 +205,7 @@ class DoctorItem(scrapy.Item):
     insert_time = scrapy.Field()
 
 
-class JianshuItem(scrapy.Item):
+class JSItem(scrapy.Item):
     id = scrapy.Field()  # 编号
     title = scrapy.Field()  # 标题
     link = scrapy.Field()  # 链接
@@ -217,7 +217,7 @@ class JianshuItem(scrapy.Item):
     subjects = scrapy.Field()  # 专题(该字段需要使用selenium模拟浏览器点击标签)
 
 
-class SunwzItem(scrapy.Item):
+class YGItem(scrapy.Item):
     # 标题
     title = scrapy.Field()
     # 链接
@@ -230,7 +230,7 @@ class SunwzItem(scrapy.Item):
     img = scrapy.Field()
 
 
-class TencentItem(scrapy.Item):
+class TXItem(scrapy.Item):
     # 职位名称
     name = scrapy.Field()
     # 详细链接
@@ -243,5 +243,9 @@ class TencentItem(scrapy.Item):
     site = scrapy.Field()
     # 发布时间
     publish = scrapy.Field()
+
+
+class SNItem(scrapy.Item):
+    name = scrapy.Field()
 
 

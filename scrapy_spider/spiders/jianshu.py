@@ -6,7 +6,7 @@
 
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from scrapy_spider.items import JianshuItem
+from scrapy_spider.items import JSItem
 from selenium import webdriver
 from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
@@ -41,7 +41,7 @@ class JianshuSpider(CrawlSpider):
         self.driver.quit()
 
     def parse_item(self, response):
-        item = JianshuspiderItem()
+        item = JSItem()
 
         id = response.url.split("/")[-1]
         title = response.xpath('//h1[@class="title"]/text()').get()

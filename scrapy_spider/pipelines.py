@@ -6,13 +6,13 @@
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymysql
-from scrapy_spider.items import NewHouseItem, EsfHouseItem, EsfHouseItem02, HospitalItem, DoctorItem
+from scrapy_spider.items import XFItem, ESFItem, ESFItem02, HospitalItem, DoctorItem
 from twisted.enterprise import adbapi
 import json
 import re
 
 
-class TencentPipeline(object):
+class TXPipeline(object):
     def __init__(self):
         self.file = open("./position.csv", "w", encoding="utf-8")
 
@@ -32,7 +32,7 @@ class TencentPipeline(object):
         self.file.close()
 
 
-class SunwzPipeline(object):
+class YGPipeline(object):
     def process_item(self, item, spider):
         # content字段的值要处理下
         item["content"] = self.process_content(item["content"])
@@ -43,11 +43,17 @@ class SunwzPipeline(object):
     @staticmethod
     def process_content(content):
         # 处理content中的乱码字符和空字符串
-        content = "".join("".join([re.sub("\xa0", "", i) for i in content]).split())
+        if content:
+            content = "".join("".join([re.sub("\xa0", "", i) for i in content]).split())
         return content
 
 
-class SoyoungPipeline(object):
+class SNPipeline(object):
+    def process_item(self, item, spider):
+        pass
+
+
+class XYPipeline(object):
     def __init__(self):
 
         config = {
@@ -96,7 +102,7 @@ class SoyoungPipeline(object):
         self.conn.close()
 
 
-class JianshuPipeline(object):
+class JSPipeline(object):
     def __init__(self):
         config = {
             "host": "localhost",
@@ -130,7 +136,7 @@ class JianshuPipeline(object):
         self.conn.close()
 
 
-class JianshuTwistedPipline(object):
+class JSTwistedPipeline(object):
     def __init__(self):
         config = {
             "host": "localhost",
@@ -164,7 +170,7 @@ class JianshuTwistedPipline(object):
             print(e)
 
 
-class SoufangPipeline(object):
+class SFPipeline(object):
     def __init__(self):
 
         config = {
@@ -187,12 +193,12 @@ class SoufangPipeline(object):
 
     def do_insert(self, cursor, item):
         value = []
-        if item.__class__ == NewHouseItem:
+        if item.__class__ == XFItem:
             fields1 = ["id", "province", "city", "community", "url", "price", "area", "district", "address", "sale"]
             for field in fields1:
                 value.append(item[field])
         # elif item.__class__.startswith("EsfHouseItem"):
-        elif item.__class__ == EsfHouseItem or EsfHouseItem02:
+        elif item.__class__ == ESFItem or ESFItem02:
             fields2 = ["community", "title", "province", "city", "address", "rooms", "floor", "toward", "year", "area", "price", "unit"]
             for field in fields2:
                 value.append(item[field])
