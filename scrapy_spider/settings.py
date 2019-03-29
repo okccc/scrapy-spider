@@ -14,13 +14,13 @@ BOT_NAME = 'scrapy_spider'
 SPIDER_MODULES = ['scrapy_spider.spiders']
 NEWSPIDER_MODULE = 'scrapy_spider.spiders'
 
-LOG_LEVEL = "DEBUG"  # 设置日志级别
+LOG_LEVEL = "WARNING"  # 设置日志级别
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_spider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = False
+ROBOTSTXT_OBEY = False  # 会默认先请求robots协议,没啥用可以禁掉
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 CONCURRENT_REQUESTS = 16
@@ -34,17 +34,18 @@ CONCURRENT_REQUESTS = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
 
 # Disable cookies (enabled by default)
-# 有些网站会追踪cookie值做反爬虫,通常可以禁掉,必须登录才能访问的网站可以在**spider类中添加custom_settings = {"COOKIES_ENABLED": True}
-COOKIES_ENABLED = False
+# 禁用cookie有些网站会追踪cookie做反爬虫,必须登录的网站可以在**spider类中添加custom_settings = {"COOKIES_ENABLED": True}
+# COOKIES_ENABLED = False
+
+# 查看cookie值在不同函数中的传递
+# COOKIES_DEBUG = True
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
 
 # Override the default request headers:
 DEFAULT_REQUEST_HEADERS = {
-  'User-Agent': 'Opera/9.80 (Macintosh; Intel Mac OS X 10.6.8; U; en) Presto/2.8.131 Version/11.11',
-  'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-  'Accept-Language': 'en',
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36',
 }
 
 # Enable or disable spider middlewares
@@ -55,12 +56,13 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-   # 'scrapy_spider.middlewares.ScrapyspiderDownloaderMiddleware': 543,
-   # 'scrapy_spider.middlewares.RandomUserAgent': 100,
-   # 'scrapy_spider.middlewares.RandomProxy': 200,
-   # 'scrapy_spider.middlewares.SeleniumMiddleware': 300,
-}
+# DOWNLOADER_MIDDLEWARES = {
+#    # 'scrapy_spider.middlewares.ScrapyspiderDownloaderMiddleware': 543,
+#    # 'scrapy_spider.middlewares.RandomUserAgent': 100,
+#    # 'scrapy_spider.middlewares.CheckUserAgent': 100,
+#    # 'scrapy_spider.middlewares.RandomProxy': 200,
+#    # 'scrapy_spider.middlewares.SeleniumMiddleware': 300,
+# }
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -72,8 +74,8 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    # 'scrapy_spider.pipelines.TXPipeline': 300,  # 300表示与scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
-   'scrapy_spider.pipelines.YGPipeline': 300,
-   # 'scrapy_spider.pipelines.SNPipeline': 300,
+   # 'scrapy_spider.pipelines.YGPipeline': 300,
+   'scrapy_spider.pipelines.SNPipeline': 300,
    # 'scrapy_spider.pipelines.JSPipeline': 300,
    # 'scrapy_spider.pipelines.JSTwistedPipeline': 300,
    # 'scrapy_spider.pipelines.XYPipeline': 300,

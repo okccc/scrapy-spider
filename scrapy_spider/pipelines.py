@@ -25,6 +25,8 @@ class TXPipeline(object):
         程序报错数据库也会有数据,因为insert之后的commit操作不需要等到con.close(),所以抓多少就能存多少
         """
         self.file.write(json.dumps(dict(item), ensure_ascii=False, indent=2))
+        print(item)
+        # 处理完的item要return,因为有些item可能还要经过后续pipeline处理
         return item
 
     def close_spider(self, spider):
@@ -38,6 +40,7 @@ class YGPipeline(object):
         item["content"] = self.process_content(item["content"])
         with open("./sun.json", "a", encoding="utf8") as f:
             f.write(json.dumps(dict(item), ensure_ascii=False, indent=2) + "\n")
+        print(item)
         return item
 
     @staticmethod
@@ -50,7 +53,12 @@ class YGPipeline(object):
 
 class SNPipeline(object):
     def process_item(self, item, spider):
-        pass
+        item["name"] = item["name"].rstrip()
+        item["author"] = "".join(item["author"].split()) if item["author"] else None
+        item["press"] = "".join(item["press"].split()) if item["press"] else None
+        print(item)
+        return item
+
 
 
 class XYPipeline(object):

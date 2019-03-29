@@ -218,34 +218,30 @@ class JSItem(scrapy.Item):
 
 
 class YGItem(scrapy.Item):
-    # 标题
-    title = scrapy.Field()
-    # 链接
-    link = scrapy.Field()
-    # 时间
-    publish = scrapy.Field()
-    # 内容
-    content = scrapy.Field()
-    # 图片
-    img = scrapy.Field()
+    title = scrapy.Field()  # 标题
+    link = scrapy.Field()  # 链接
+    publish = scrapy.Field()  # 发布时间
+    content = scrapy.Field()  # 内容
+    img = scrapy.Field()  # 图片
 
 
 class TXItem(scrapy.Item):
-    # 职位名称
-    name = scrapy.Field()
-    # 详细链接
-    link = scrapy.Field()
-    # 职位类别
-    sort = scrapy.Field()
-    # 招聘人数
-    num = scrapy.Field()
-    # 上班地点
-    site = scrapy.Field()
-    # 发布时间
-    publish = scrapy.Field()
+    name = scrapy.Field()  # 名称
+    link = scrapy.Field()  # 链接
+    sort = scrapy.Field()  # 分类
+    num = scrapy.Field()  # 人数
+    site = scrapy.Field()  # 地址
+    publish = scrapy.Field()  # 发布时间
 
 
 class SNItem(scrapy.Item):
-    name = scrapy.Field()
+    b_category = scrapy.Field()  # 大分类
+    s_category = scrapy.Field()  # 小分类
+    link = scrapy.Field()  # 链接
+    name = scrapy.Field()  # 书名
+    author = scrapy.Field()  # 作者
+    press = scrapy.Field()  # 出版社
+    publish = scrapy.Field()  # 出版时间
+    price = scrapy.Field()  # 价格
 
 
