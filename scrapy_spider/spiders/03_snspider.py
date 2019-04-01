@@ -3,6 +3,7 @@
 import scrapy
 from scrapy_spider.items import SNItem
 from copy import deepcopy
+import re
 
 
 class SNSpider(scrapy.Spider):
@@ -36,8 +37,8 @@ class SNSpider(scrapy.Spider):
                     yield scrapy.Request(
                         url=href,
                         callback=self.parse_book_list,
-                        # 在不同Request之间传递meta参数时要注意item对象的作用范围,直接赋值会覆盖前面结果,此处要用深拷贝
-                        meta={"item": deepcopy(item)}
+                        # 由于scrapy是异步的,在不同Request之间传递meta时要注意item作用范围,直接赋值会覆盖前面结果,此处要用深拷贝
+                        meta={"item": deepcopy(href)}
                     )
 
     def parse_book_list(self, response):
@@ -55,6 +56,18 @@ class SNSpider(scrapy.Spider):
                 url=item["link"],
                 callback=self.parse_book_detail,
                 meta={"item": deepcopy(item)}
+            )
+        # 判断下一页(翻页时地址栏url居然没变说明翻页功能是通过js生成的)
+        s_category_id = re.search("\d{6}", item["href"]).group()
+        current_page = re.findall('param.currentPage = (.*?);', response.text)[0]
+        page_num = re.findall('param.pageNumbers = (.*?);', response.text)[0]
+        if current_page < page_num:
+            next_page = "https://list.suning.com/emall/showProductList.do?ci={}&pg=03&cp={}".format(s_category_id, current_page.replace('"',''))
+            print(next_page)
+            yield scrapy.Request(
+                url=next_page,
+                callback=self.parse_book_list,
+                meta={"item": item}
             )
 
     def parse_book_detail(self, response):
