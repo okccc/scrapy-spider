@@ -11,7 +11,7 @@ LinkExtractor(
     deny = (),                  # 与这个正则表达式不匹配的URL一定不提取,优先级高于allow
     allow_domains = (),         # 会被提取的链接的domains(常用)
     deny_domains = (),          # 一定不会被提取链接的domains
-    restrict_xpaths = (),       # 使用xpath表达式,和allow共同作用过滤链接
+    restrict_xpaths = (),       # 如果要提取的链接太复杂re不好匹配可以改用xpath
 )
 Rule(
     link_extractor,             # 是一个LinkExtractor对象,定义需要提取的链接
