@@ -60,8 +60,7 @@ class SNPipeline(object):
         return item
 
 
-
-class XYPipeline(object):
+class SYPipeline(object):
     def __init__(self):
 
         config = {
@@ -76,26 +75,13 @@ class XYPipeline(object):
         self.cur = self.conn.cursor()
 
     def process_item(self, item, spider):
-        value = []
-        if item.__class__ == HospitalItem:
-            fields1 = ["id", "name", "aptitude", "address", "skilled", "insert_time"]
-            for field in fields1:
-                value.append(item[field])
-            # print(value)
-        elif item.__class__ == DoctorItem:
-            fields2 = ["id", "name", "hospital_id", "hospital_name", "title", "skilled", "insert_time"]
-            for field in fields2:
-                value.append(item[field])
-            # print(value)
-        else:
-            pass
-
+        value = [item[i] for i in list(dict(item).keys())]
         try:
             sql1 = "replace into hospital values(%s,%s,%s,%s,%s,%s)"
             sql2 = "replace into doctor values(%s,%s,%s,%s,%s,%s,%s)"
-            if len(value) == 6:
+            if item.__class__ == HospitalItem:
                 self.cur.execute(sql1, value)
-            elif len(value) == 7:
+            elif item.__class__ == DoctorItem:
                 self.cur.execute(sql2, value)
             else:
                 pass

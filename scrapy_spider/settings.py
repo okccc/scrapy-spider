@@ -75,10 +75,10 @@ DEFAULT_REQUEST_HEADERS = {
 ITEM_PIPELINES = {
    # 'scrapy_spider.pipelines.TXPipeline': 300,  # 300表示与scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
    # 'scrapy_spider.pipelines.YGPipeline': 300,
-   'scrapy_spider.pipelines.SNPipeline': 300,
+   # 'scrapy_spider.pipelines.SNPipeline': 300,
    # 'scrapy_spider.pipelines.JSPipeline': 300,
-   # 'scrapy_spider.pipelines.JSTwistedPipeline': 300,
-   # 'scrapy_spider.pipelines.XYPipeline': 300,
+   'scrapy_spider.pipelines.JSTwistedPipeline': 300,
+   # 'scrapy_spider.pipelines.SYPipeline': 300,
    # 'scrapy_spider.pipelines.SFPipeline': 300,
 }
 

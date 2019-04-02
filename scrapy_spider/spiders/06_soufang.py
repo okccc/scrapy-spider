@@ -33,9 +33,9 @@ from scrapy_spider.utils.common import get_md5
 from scrapy_spider.items import MyItemLoader
 
 
-class scrapyspider(scrapy.Spider):
+class SFSpider(scrapy.Spider):
     # 爬虫名称
-    name = 'soufang'
+    name = 'sf'
     # 域名范围
     allowed_domains = ['fang.com']
     # 起始页面
@@ -66,11 +66,11 @@ class scrapyspider(scrapy.Spider):
 
         province = None
         # 获取表格所有行
-        trs = response.xpath('//div[@class="outCont"]//tr')
+        tr_list = response.xpath('//div[@class="outCont"]//tr')
         # 遍历所有行
-        for tr in trs:
+        for tr in tr_list:
             # 获取省份名称(去空格)
-            province_text = re.sub("\s", "", tr.xpath('./td[2]//text()').extract()[0])
+            province_text = re.sub("\s", "", tr.xpath('./td[2]//text()').extract_first())
             # 判断省份值是否为空字符串：不是""就赋值,是""就不赋值(此时province还是之前的值),如此循环直到有新的值覆盖 -->参考：basic-->类型和变量-->test()
             if province_text:
                 province = province_text
@@ -78,12 +78,12 @@ class scrapyspider(scrapy.Spider):
             if province == "其它":
                 continue
             # 获取所有城市行
-            citys = tr.xpath('./td[3]//a')
-            for each in citys:
+            a_list = tr.xpath('./td[3]//a')
+            for a in a_list:
                 # 城市名称
-                city = each.xpath('./text()').extract()[0]
+                city = a.xpath('./text()').extract_first()
                 # 该城市链接
-                link = each.xpath('./@href').extract()[0]
+                link = a.xpath('./@href').extract_first()
                 pinyin = link.split("//")[1].split(".")[0]
                 # 北京比较特殊
                 if pinyin == "bj":

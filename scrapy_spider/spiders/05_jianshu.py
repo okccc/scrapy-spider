@@ -12,8 +12,8 @@ from scrapy.xlib.pydispatch import dispatcher
 from scrapy import signals
 
 
-class JianshuSpider(CrawlSpider):
-    name = 'jianshu'
+class JSSpider(CrawlSpider):
+    name = 'js'
     allowed_domains = ['jianshu.com']
     start_urls = ['https://jianshu.com']
 

@@ -121,7 +121,7 @@ class CheckUserAgent(object):
         # print(dir(request))
         # print(dir(response))
         print(request.headers["User-Agent"])
-        # 注意：process_response()必须有返回值,返回request表示经过引擎交给调度器,返回response表示经过引擎交给爬虫(scrapy架构图)
+        # 注意：process_response()必须有返回值,返回request表示经由引擎交给调度器,返回response表示经由引擎交给爬虫(scrapy架构图)
         # AssertionError: Middleware CheckUserAgent.process_response must return Response or Request, got <class 'NoneType'>
         return response
 

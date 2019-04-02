@@ -17,7 +17,7 @@ Join()：合并多个结果
 TakeFirst(): 返回第一个非空/None值
 总结：MapCompose()适合input_processor,其它的适合output_processor
 
-数据流向(debug)：add_xpath(会调用input_processor处理,数据暂存在ItemLoader中) --> load_item(会调用output_processor处理) --> item
+数据流向(debug)：add_xpath(调用input_processor处理,数据暂存在ItemLoader中) --> load_item(调用output_processor处理) --> item
 """
 
 import scrapy
@@ -41,10 +41,8 @@ def deal_tab(value):
     # 处理字符串中间的空格(strip只能去除字符串两边的空格)
     return "".join(value.split())
 
-
 def deal_district(value):
     return value.split()[0]
-
 
 class XFItem(scrapy.Item):
     # 构建Item模型(类似ORM对象关系映射)：用来定义结构化数据字段,保存爬取到的数据,类似python的dict
@@ -67,7 +65,6 @@ class XFItem(scrapy.Item):
     address = scrapy.Field()
     sale = scrapy.Field()
 
-
 def deal_rooms(value):
     tmp = "".join(value.split()).split("|")
     if len(tmp) >= 1:
@@ -87,7 +84,6 @@ def deal_year(value):
     tmp = "".join(value.split()).split("|")
     if len(tmp) >= 4:
         return tmp[3]
-
 
 class ESFItem(scrapy.Item):
     province = scrapy.Field()
@@ -117,7 +113,6 @@ class ESFItem(scrapy.Item):
         input_processor=MapCompose(remove_tags, deal_tab)
     )
 
-
 def deal_rooms02(value):
     tmp = "".join(value.split()).split("|")
     if len(tmp) >= 1:
@@ -142,7 +137,6 @@ def deal_year02(value):
     tmp = "".join(value.split()).split("|")
     if len(tmp) >= 5:
         return tmp[4]
-
 
 class ESFItem02(scrapy.Item):
     province = scrapy.Field()
@@ -187,7 +181,6 @@ class HospitalItem(scrapy.Item):
     # 写入时间
     insert_time = scrapy.Field()
 
-
 class DoctorItem(scrapy.Item):
     # 医生编号
     id = scrapy.Field()
@@ -217,6 +210,16 @@ class JSItem(scrapy.Item):
     subjects = scrapy.Field()  # 专题(该字段需要使用selenium模拟浏览器点击标签)
 
 
+class SNItem(scrapy.Item):
+    b_category = scrapy.Field()  # 大分类
+    s_category = scrapy.Field()  # 小分类
+    link = scrapy.Field()  # 链接
+    name = scrapy.Field()  # 书名
+    author = scrapy.Field()  # 作者
+    press = scrapy.Field()  # 出版社
+    publish = scrapy.Field()  # 出版时间
+    price = scrapy.Field()  # 价格
+
 class YGItem(scrapy.Item):
     title = scrapy.Field()  # 标题
     link = scrapy.Field()  # 链接
@@ -232,16 +235,3 @@ class TXItem(scrapy.Item):
     num = scrapy.Field()  # 人数
     site = scrapy.Field()  # 地址
     publish = scrapy.Field()  # 发布时间
-
-
-class SNItem(scrapy.Item):
-    b_category = scrapy.Field()  # 大分类
-    s_category = scrapy.Field()  # 小分类
-    link = scrapy.Field()  # 链接
-    name = scrapy.Field()  # 书名
-    author = scrapy.Field()  # 作者
-    press = scrapy.Field()  # 出版社
-    publish = scrapy.Field()  # 出版时间
-    price = scrapy.Field()  # 价格
-
-

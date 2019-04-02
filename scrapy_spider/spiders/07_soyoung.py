@@ -14,17 +14,9 @@ import time
 
 
 class SoyoungSpider(CrawlSpider):
-    name = 'soyoung'
-    allowed_domains = ['y.soyoung.com']
-
-    start_urls = [
-        'http://y.soyoung.com/hospital',
-        'http://y.soyoung.com/doctor',
-    ]
-
-    # def start_requests(self):
-    #     yield scrapy.Request("http://y.soyoung.com/hospital", callback=self.parse_hospital),
-    #     # yield scrapy.Request("http://y.soyoung.com/doctor", callback=self.parse_doctor),
+    name = 'sy'
+    allowed_domains = ['soyoung.com']
+    start_urls = ['http://y.soyoung.com/hospital', 'http://y.soyoung.com/doctor']
 
     rules = (
         Rule(LinkExtractor(allow='/hospital/index/page/\d+'), callback='parse_hospital', follow=True),
@@ -36,9 +28,9 @@ class SoyoungSpider(CrawlSpider):
         item = HospitalItem()
         hospitals = response.xpath('//li[@onclick]')
         for each in hospitals:
-            id = each.xpath('./a/@href').extract()[0][1:]
-            name = each.xpath('./a/@title').extract()[0]
-            aptitude = each.xpath('.//p[1]/text()').extract()[0]
+            id = each.xpath('./a/@href').extract_first()[1:]
+            name = each.xpath('./a/@title').extract_first()
+            aptitude = each.xpath('.//p[1]/text()').extract_first()
             address_list = each.xpath('.//p[2]/text()').extract()
             if len(address_list) == 0:
                 address = ""
@@ -63,9 +55,9 @@ class SoyoungSpider(CrawlSpider):
         item = DoctorItem()
         doctors = response.xpath('//li[@onclick]')
         for each in doctors:
-            id = each.xpath('./a/@href').extract()[0][1:]
-            name = each.xpath('./a/@title').extract()[0]
-            hospital_id = each.xpath('.//p[1]/a/@href').extract()[0][1:]
+            id = each.xpath('./a/@href').extract_first()[1:]
+            name = each.xpath('./a/@title').extract_first()
+            hospital_id = each.xpath('.//p[1]/a/@href').extract_first()[1:]
             hospital_names = each.xpath('.//p[1]/a/@title').extract()
             if len(hospital_names) == 0:
                 hospital_name = ""
