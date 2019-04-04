@@ -1,6 +1,6 @@
 #### 为什么要用scrapy-redis?  
-- scrapy基于set()做request去重,request对象存放于各个程序的调度器(内存),所以只能单机爬并且程序重启会重复抓取已经抓过的url
-- scrapy-redis基于redis做request去重,request对象存放于redis,可以联机爬并且程序重启不会重复抓取已经抓过的url(断点续爬),从而实现分布式增量爬虫
+- scrapy基于set()做去重,request对象存放于各个程序的调度器(内存),所以只能单机爬并且程序重启会重复抓取已经抓过的url
+- scrapy-redis基于redis的set做去重,request对象存放于redis持久化,可以联机爬并且程序重启不会重复抓取已经抓过的url(断点续爬),从而实现分布式增量爬虫
 
 ### settings.py变化部分
 ```python
