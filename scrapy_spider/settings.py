@@ -14,7 +14,7 @@ BOT_NAME = 'scrapy_spider'
 SPIDER_MODULES = ['scrapy_spider.spiders']
 NEWSPIDER_MODULE = 'scrapy_spider.spiders'
 
-LOG_LEVEL = "WARNING"  # 设置日志级别
+LOG_LEVEL = "DEBUG"  # 设置日志级别
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'scrapy_spider (+http://www.yourdomain.com)'
@@ -72,16 +72,16 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+
 ITEM_PIPELINES = {
-   # 'scrapy_spider.pipelines.TXPipeline': 300,  # 300表示与scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
-   # 'scrapy_spider.pipelines.YGPipeline': 300,
+   # 'scrapy_spider.pipelines.YGPipeline': 300,  # 300表示与scrapy引擎的距离,值越小越靠近引擎,数据就会先经过这个管道
+   'scrapy_spider.pipelines.TXPipeline': 300,
    # 'scrapy_spider.pipelines.SNPipeline': 300,
    # 'scrapy_spider.pipelines.JSPipeline': 300,
-   'scrapy_spider.pipelines.JSTwistedPipeline': 300,
+   # 'scrapy_spider.pipelines.JSTwistedPipeline': 300,
    # 'scrapy_spider.pipelines.SYPipeline': 300,
    # 'scrapy_spider.pipelines.SFPipeline': 300,
 }
-
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -102,3 +102,5 @@ ITEM_PIPELINES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+MONGODB_HOST = "localhost"  # 指定mongodb地址

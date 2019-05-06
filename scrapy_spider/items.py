@@ -229,9 +229,9 @@ class YGItem(scrapy.Item):
 
 
 class TXItem(scrapy.Item):
-    name = scrapy.Field()  # 名称
+    title = scrapy.Field()  # 名称
     link = scrapy.Field()  # 链接
-    sort = scrapy.Field()  # 分类
-    num = scrapy.Field()  # 人数
-    site = scrapy.Field()  # 地址
-    publish = scrapy.Field()  # 发布时间
+    category = scrapy.Field()  # 分类
+    location = scrapy.Field()  # 地址
+    update_time = scrapy.Field()  # 发布时间
+    responsibility = scrapy.Field()  # 要求

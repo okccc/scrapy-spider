@@ -5,42 +5,31 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
-import pymysql
-from scrapy_spider.items import XFItem, ESFItem, ESFItem02, HospitalItem, DoctorItem
-from twisted.enterprise import adbapi
 import json
 import re
+import pymysql
+import pymongo
+from scrapy_spider.settings import MONGODB_HOST
+from scrapy_spider.items import TXItem, XFItem, ESFItem, ESFItem02, HospitalItem, DoctorItem
+from twisted.enterprise import adbapi
 
 
-class TXPipeline(object):
-    def __init__(self):
-        self.file = open("./position.csv", "w", encoding="utf-8")
-
+class YGPipeline(object):
     def process_item(self, item, spider):
         """
-        process_item()方法必须写,用来处理item数据
+        该方法必须写,用来处理item数据
         注意：要先将item对象转换成dict --> TypeError: Object of type 'MyspiderItem' is not JSON serializable
         写入文件和数据库区别：
         程序报错文件是没有数据的,因为没有等到file.close()执行
         程序报错数据库也会有数据,因为insert之后的commit操作不需要等到con.close(),所以抓多少就能存多少
         """
-        self.file.write(json.dumps(dict(item), ensure_ascii=False, indent=2))
-        print(item)
-        # 处理完的item要return,因为有些item可能还要经过后续pipeline处理
-        return item
-
-    def close_spider(self, spider):
-        # This method is called when the spider is closed.
-        self.file.close()
-
-
-class YGPipeline(object):
-    def process_item(self, item, spider):
         # content字段的值要处理下
         item["content"] = self.process_content(item["content"])
+        # 保存到本地文件
         with open("./sun.json", "a", encoding="utf8") as f:
             f.write(json.dumps(dict(item), ensure_ascii=False, indent=2) + "\n")
         print(item)
+        # 处理完的item要return,因为有些item可能还要经过后续pipeline处理
         return item
 
     @staticmethod
@@ -49,6 +38,21 @@ class YGPipeline(object):
         if content:
             content = "".join("".join([re.sub("\xa0", "", i) for i in content]).split())
         return content
+
+
+class TXPipeline(object):
+    def __init__(self):
+        # 创建数据库连接
+        self.conn = pymongo.MongoClient(host=MONGODB_HOST)
+        # 指定数据库和集合
+        self.collection = self.conn["tencent"]["position"]
+
+    def process_item(self, item, spider):
+        if isinstance(item, TXItem):
+            print(item)
+            # 往集合插入document数据
+            self.collection.insert(dict(item))
+        return item
 
 
 class SNPipeline(object):
