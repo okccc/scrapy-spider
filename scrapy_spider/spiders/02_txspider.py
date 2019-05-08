@@ -16,7 +16,6 @@ class TXSpider01(scrapy.Spider):
     # url列表
     start_urls = ["https://careers.tencent.com/tencentcareer/api/post/Query?pageIndex={}&pageSize=10".format(i) for i in range(1, 343)]
 
-    # 注意：parse()方法名是固定的,继承的父类未实现的方法
     def parse(self, response):
         # 创建Item对象
         item = TXItem()

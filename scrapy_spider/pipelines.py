@@ -48,6 +48,14 @@ class TXPipeline(object):
         self.collection = self.conn["tencent"]["position"]
 
     def process_item(self, item, spider):
+        item["responsibility"] = "".join(item["responsibility"].split()) if item["responsibility"] else None
+
+        # # 1.保存到本地文件
+        # with open("./position.csv", "a", encoding="utf8") as f:
+        #     f.write(json.dumps(dict(item), ensure_ascii=False, indent=2) + "\n")
+        # print(item)
+
+        # 2.写入mongodb数据库
         if isinstance(item, TXItem):
             print(item)
             # 往集合插入document数据

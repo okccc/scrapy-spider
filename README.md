@@ -1,9 +1,9 @@
 # scrapy-spider
-#### 为什么要用scrapy-redis?  
+## scrapy-redis作用?
 - scrapy基于set()做去重,request对象存放于各个程序的调度器(内存),所以只能单机爬并且程序重启会重复抓取已经抓过的url
 - scrapy-redis基于redis的set做去重,request对象存放于redis持久化,可以联机爬并且程序重启不会重复抓取已经抓过的url(断点续爬),从而实现分布式增量爬虫
 
-### settings.py变化部分
+## settings.py变化部分
 ```python
 REDIS_URL = "redis://127.0.0.1:6379"  # redis地址
 DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"  # 指定指纹去重组件,取代scrapy默认去重方法
@@ -18,7 +18,7 @@ ITEM_PIPELINES = {
 }
 ```
 
-### RedisPipeline类
+## RedisPipeline类
 ```python
 def process_item(self, item, spider):
     return deferToThread(self._process_item, item, spider)
@@ -34,7 +34,7 @@ def item_key(self, item, spider):
     return self.key % {'spider': spider.name}
 ```
 
-### RFPDupeFilter类
+## RFPDupeFilter类
 - 判断指纹是否已存在于redis的set集合
 ```python
 def request_seen(self, request):
@@ -83,7 +83,7 @@ def request_fingerprint(request, include_headers=None):
     return fp.hexdigest()
 ```
 
-### Scheduler类
+## Scheduler类
 - 调度器是否持久化
 ```python
 def close(self, reason):
